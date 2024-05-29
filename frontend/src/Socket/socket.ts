@@ -5,7 +5,7 @@ import {
 } from "../../../backend/common/types";
 
 const NODE_ENV = import.meta.env.VITE_NODE_ENV;
-const BACKEND_URL = import.meta.env.BACKEND_URL || "null";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "null";
 export const SERVER_URL =
   NODE_ENV === "production" ? BACKEND_URL : "http://localhost:3000";
 

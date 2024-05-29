@@ -1,0 +1,80 @@
+import {
+  ClientToServerEvents,
+  InterServerEvents,
+  ServerToClientEvents,
+  SocketData,
+  UserWithRoom,
+} from "./common/types";
+
+import express from "express";
+
+import { createServer } from "http";
+import { Server } from "socket.io";
+import { UserStore } from "./common/UserStore";
+const port = process.env.PORT || 3000;
+
+const app = express();
+const httpServer = createServer(app);
+
+const io = new Server<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  InterServerEvents,
+  SocketData
+>(httpServer, {
+  cors: {
+    origin: "*",
+  },
+});
+
+httpServer.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+
+app.get("/", (req, res) => {
+  res.status(200).send("Welcome to the Name picker API!");
+});
+
+io.on("connection", (socket) => {
+  const roomName = socket.handshake.query.roomName as string;
+  console.log(`User connected: ${socket.id} to room ${roomName}`);
+
+  if (!UserStore[roomName]) {
+    UserStore[roomName] = {};
+  }
+
+  console.log(`User connected: ${socket.id}`);
+  socket.on("disconnect", () => {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+
+  socket.on("join", ({ roomname, username }: UserWithRoom) => {
+    socket.join(roomname);
+
+    console.log(`${username} has joined the room ${roomname}`);
+  });
+
+  socket.on("add-name", ({ roomname, username }: UserWithRoom) => {
+    UserStore[roomname][username] = true;
+    io.to(roomname).emit("add-name", username);
+    console.log(`Name added: ${username}`);
+  });
+
+  socket.on("remove-name", ({ roomname, username }: UserWithRoom) => {
+    delete UserStore[roomname][username];
+    io.to(roomname).emit("remove-name", username);
+    console.log(`Name removed: ${username}`);
+  });
+
+  socket.on("check-name", ({ roomname, username }: UserWithRoom) => {
+    UserStore[roomname][username] = true;
+    io.to(roomname).emit("check-name", username);
+    console.log(`Name checked: ${username}`);
+  });
+
+  socket.on("uncheck-name", ({ roomname, username }: UserWithRoom) => {
+    UserStore[roomname][username] = false;
+    io.to(roomname).emit("uncheck-name", username);
+    console.log(`Name unchecked: ${username}`);
+  });
+});

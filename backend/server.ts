@@ -77,4 +77,14 @@ io.on("connection", (socket) => {
     io.to(roomname).emit("user-list", UserStore[roomname]);
     console.log(`Name unchecked: ${username}`);
   });
+
+  socket.on("roll-dice", ({ roomname }: { roomname: string }) => {
+    const names = Object.keys(UserStore[roomname]).filter(
+      (name) => UserStore[roomname][name]
+    );
+    const randomIndex = Math.floor(Math.random() * names.length);
+    const randomName = names[randomIndex];
+    io.to(roomname).emit("random-name", randomName);
+    console.log(`Rolled a random name: ${randomName}`);
+  });
 });

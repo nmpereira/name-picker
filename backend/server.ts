@@ -41,40 +41,40 @@ io.on("connection", (socket) => {
 
   if (!UserStore[roomName]) {
     UserStore[roomName] = {};
+    console.log(`Created room ${roomName}`);
   }
 
-  console.log(`User connected: ${socket.id}`);
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
   });
 
   socket.on("join", ({ roomname, username }: UserWithRoom) => {
     socket.join(roomname);
-
+    io.to(roomname).emit("user-list", UserStore[roomname]);
     console.log(`${username} has joined the room ${roomname}`);
   });
 
   socket.on("add-name", ({ roomname, username }: UserWithRoom) => {
     UserStore[roomname][username] = true;
-    io.to(roomname).emit("add-name", username);
+    io.to(roomname).emit("user-list", UserStore[roomname]);
     console.log(`Name added: ${username}`);
   });
 
   socket.on("remove-name", ({ roomname, username }: UserWithRoom) => {
     delete UserStore[roomname][username];
-    io.to(roomname).emit("remove-name", username);
+    io.to(roomname).emit("user-list", UserStore[roomname]);
     console.log(`Name removed: ${username}`);
   });
 
   socket.on("check-name", ({ roomname, username }: UserWithRoom) => {
     UserStore[roomname][username] = true;
-    io.to(roomname).emit("check-name", username);
+    io.to(roomname).emit("user-list", UserStore[roomname]);
     console.log(`Name checked: ${username}`);
   });
 
   socket.on("uncheck-name", ({ roomname, username }: UserWithRoom) => {
     UserStore[roomname][username] = false;
-    io.to(roomname).emit("uncheck-name", username);
+    io.to(roomname).emit("user-list", UserStore[roomname]);
     console.log(`Name unchecked: ${username}`);
   });
 });

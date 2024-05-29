@@ -11,10 +11,12 @@
 }
 */
 
+export interface IRoom {
+  [key: string]: boolean;
+}
+
 export interface IRoomStore {
-  [key: string]: {
-    [key: string]: boolean;
-  };
+  [key: string]: IRoom;
 }
 
 export const UserStore: IRoomStore = {} as IRoomStore;

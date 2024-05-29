@@ -1,4 +1,4 @@
-import { Server } from "socket.io";
+import { IRoom } from "./UserStore";
 
 export interface UserWithRoom {
   username: string;
@@ -6,11 +6,11 @@ export interface UserWithRoom {
 }
 
 export interface ServerToClientEvents {
-  "add-name": (name: string) => void;
-  "remove-name": (name: string) => void;
-  "check-name": (name: string) => void;
-  "uncheck-name": (name: string) => void;
-  "user-list": (userList: string[]) => void;
+  // "add-name": (name: string) => void;
+  // "remove-name": (name: string) => void;
+  // "check-name": (name: string) => void;
+  // "uncheck-name": (name: string) => void;
+  "user-list": (userList: IRoom) => void;
 }
 
 export interface ClientToServerEvents {

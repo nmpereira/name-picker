@@ -1,14 +1,13 @@
-import { useParams } from "react-router-dom";
 import NameList from "../components/NameList";
 import { useEffect, useState } from "react";
-import socket from "../Socket/socket";
+import socket, { roomName } from "../Socket/socket";
+import { IRoom } from "../../../backend/common/UserStore";
 
 const Room = () => {
-  const { id: roomname } = useParams();
-  const [names, setNames] = useState<string[]>([]);
+  const [names, setNames] = useState<IRoom>({});
 
   const onConnect = () => {
-    socket.emit("join", { room: roomname, username: "test-user" });
+    socket.emit("join", { roomname: roomName, username: "test-user" });
     console.log("Connected to server");
   };
 
@@ -16,7 +15,8 @@ const Room = () => {
     console.log("Disconnected from server");
   };
 
-  const onUserList = (userList: string[]) => {
+  const onUserList = (userList: IRoom) => {
+    console.log("User list received", userList);
     setNames(userList);
   };
   useEffect(() => {
@@ -33,7 +33,7 @@ const Room = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h1>Room {roomname}</h1>
+      <h1>Room {roomName}</h1>
       <NameList names={names} />
     </div>
   );

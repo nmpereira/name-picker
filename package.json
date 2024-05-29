@@ -4,14 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:client": "cd client && npm run build",
-    "build:server": "cd server && npm run build",
-    "start": "node index.js"
+    "build:client": "cd frontend && npm run build",
+    "build:server": "cd backend && npm run build",
+    "start:client": "cd frontend && npm start",
+    "start:server": "cd backend && npm start"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "concurrently": "^8.2.2"
-  }
+  "license": "ISC"
 }

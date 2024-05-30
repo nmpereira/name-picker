@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("add-name", ({ roomname, username }: UserWithRoom) => {
-    UserStore[roomname].users[username] = true;
+    UserStore[roomname].users[username] = false;
     io.to(roomname).emit("user-list", UserStore[roomname].users);
     console.log(`Name added: ${username}`);
   });
@@ -105,5 +105,11 @@ io.on("connection", (socket) => {
     UserStore[roomname].lastRoll = randomName;
     io.to(roomname).emit("random-name", randomName);
     console.log(`Rolled a random name: ${randomName}`);
+
+    Object.keys(UserStore[roomname].users).forEach((name) => {
+      UserStore[roomname].users[name] = false;
+    });
+
+    io.to(roomname).emit("user-list", UserStore[roomname].users);
   });
 });

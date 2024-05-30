@@ -4,12 +4,14 @@ import socket, { roomName } from "../Socket/socket";
 import { IRoom } from "../../../backend/common/UserStore";
 import NamePicker from "../components/NamePicker";
 import ConnectionIndicator from "../components/ConnectionIndicator";
+import OnlineCount from "../components/OnlineCount";
 
 const Room = () => {
   const [names, setNames] = useState<IRoom>({});
   const [randomName, setRandomName] = useState<string | null>(null);
   const [isRolling, setIsRolling] = useState<boolean>(false);
   const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [onlineCount, setOnlineCount] = useState<number>(0);
 
   const onConnect = () => {
     socket.emit("join", { roomname: roomName, username: "test-user" });
@@ -39,12 +41,17 @@ const Room = () => {
     setIsRolling(true);
   };
 
+  const onOnlineUsers = (onlineUsers: number) => {
+    setOnlineCount(onlineUsers);
+  };
+
   useEffect(() => {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("user-list", onUserList);
     socket.on("random-name", onRandomName);
     socket.on("rolling", onRolling);
+    socket.on("online-users", onOnlineUsers);
 
     return () => {
       socket.off("connect", onConnect);
@@ -64,6 +71,11 @@ const Room = () => {
       <NamePicker name={randomName} isRolling={isRolling} />
       <div className="divider"></div>
       <NameList names={names} />
+
+      {/* stick to bottom */}
+      <div className="fixed bottom-0 right-0 p-4">
+        <OnlineCount count={onlineCount} />
+      </div>
     </div>
   );
 };

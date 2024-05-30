@@ -13,6 +13,7 @@ export interface ServerToClientEvents {
   "user-list": (userList: IRoom) => void;
   "random-name": (name: string | null) => void;
   rolling: () => void;
+  "online-users": (onlineUsers: number) => void;
 }
 
 export interface ClientToServerEvents {

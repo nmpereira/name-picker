@@ -49,7 +49,12 @@ io.on("connection", (socket) => {
   }
 
   socket.on("disconnect", () => {
-    console.log(`User disconnected: ${socket.id}`);
+    console.log(`User disconnected: ${socket.id} from room ${roomName}`);
+
+    io.to(roomName).emit(
+      "online-users",
+      io.sockets.adapter.rooms.get(roomName)?.size || 0
+    );
   });
 
   socket.on("join", ({ roomname, username }: UserWithRoom) => {
@@ -63,6 +68,11 @@ io.on("connection", (socket) => {
       );
     }
     console.log(`${username} has joined the room ${roomname}`);
+
+    io.to(roomname).emit(
+      "online-users",
+      io.sockets.adapter.rooms.get(roomname)?.size || 0
+    );
   });
 
   socket.on("add-name", ({ roomname, username }: UserWithRoom) => {

@@ -89,6 +89,15 @@ io.on("connection", (socket) => {
   });
 
   socket.on("roll-dice", async ({ roomname }: { roomname: string }) => {
+    if (
+      Object.keys(UserStore[roomname].users).length === 0 ||
+      !Object.values(UserStore[roomname].users).some((checked) => checked)
+    ) {
+      console.log("No names to roll");
+      io.to(roomname).emit("random-name", null);
+      return;
+    }
+
     io.to(roomname).emit("rolling");
 
     await new Promise((resolve) => {

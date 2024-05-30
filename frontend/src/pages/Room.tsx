@@ -23,8 +23,12 @@ const Room = () => {
     setNames(userList);
   };
 
-  const onRandomName = (name: string) => {
+  const onRandomName = (name: string | null) => {
     console.log("Random name received", name);
+    if (!name) {
+      setRandomName(null);
+      return;
+    }
     setRandomName(name);
     setIsRolling(false);
   };

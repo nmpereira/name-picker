@@ -11,15 +11,16 @@ const NamePicker = ({ name, isRolling }: NamePickerProps) => {
   };
   return (
     <>
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={handleRoll}
-      >
-        🎲
-      </button>
+      <div className=" font-bold py-2 px-4 rounded" onClick={handleRoll}>
+        <img
+          src="https://emojicdn.elk.sh/🎲"
+          alt="raised-hand"
+          className={`w-20 h-20`}
+        />
+      </div>
 
       <h1 className="text-2xl font-bold my-10">
-        {
+        {/* {
           // if name is null, show "Pick a name"
           !name ? (
             "Pick a name"
@@ -29,7 +30,15 @@ const NamePicker = ({ name, isRolling }: NamePickerProps) => {
             // if name is not null and isRolling is false, show the name
             <RandomReveal isPlaying duration={2} characters={name} />
           )
-        }
+        } */}
+
+        {isRolling ? (
+          <span className="loading loading-dots loading-lg"></span>
+        ) : name ? (
+          <RandomReveal isPlaying duration={2} characters={name} />
+        ) : (
+          "Pick a name"
+        )}
       </h1>
     </>
   );

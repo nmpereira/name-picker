@@ -42,9 +42,8 @@ const Room = () => {
   return (
     <div className="flex flex-col items-center justify-center">
       <h1>Room {roomName}</h1>
-      <NameList names={names} />
-
       <NamePicker name={randomName ? randomName : "No name picked yet"} />
+      <NameList names={names} />
     </div>
   );
 };

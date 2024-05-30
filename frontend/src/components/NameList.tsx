@@ -1,6 +1,6 @@
 import { IRoom } from "../../../backend/common/UserStore";
 import socket, { roomName } from "../Socket/socket";
-import NameRow from "./NameRow";
+import NameCard from "./NameCard";
 
 interface NameListProps {
   names: IRoom;
@@ -8,15 +8,14 @@ interface NameListProps {
 
 const NameList = ({ names }: NameListProps) => {
   return (
-    <div className="flex flex-col">
-      <h2>Names</h2>
-      <ul>
+    <div className="flex flex-col items-center justify-center">
+      <NameInput />
+
+      <ul className="flex flex-wrap gap-4 mt-6 justify-center">
         {Object.keys(names).map((name, index) => (
-          <NameRow key={index} name={name} checked={names[name]} />
+          <NameCard key={index} name={name} checked={names[name]} />
         ))}
       </ul>
-
-      <NameInput />
     </div>
   );
 };
@@ -26,6 +25,7 @@ const NameInput = () => {
     <input
       type="text"
       placeholder="Add a name"
+      className="border-2 border-gray-300 p-2 rounded-lg w-48"
       onKeyPress={(e) => {
         if (e.key === "Enter") {
           socket.emit("add-name", {

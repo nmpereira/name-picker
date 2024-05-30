@@ -3,28 +3,30 @@ import { useEffect, useState } from "react";
 import socket, { roomName } from "../Socket/socket";
 import { IRoom } from "../../../backend/common/UserStore";
 import NamePicker from "../components/NamePicker";
+import ConnectionIndicator from "../components/ConnectionIndicator";
 
 const Room = () => {
   const [names, setNames] = useState<IRoom>({});
   const [randomName, setRandomName] = useState<string | null>(null);
   const [isRolling, setIsRolling] = useState<boolean>(false);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
 
   const onConnect = () => {
     socket.emit("join", { roomname: roomName, username: "test-user" });
     console.log("Connected to server");
+    setIsConnected(true);
   };
 
   const onDisconnect = () => {
     console.log("Disconnected from server");
+    setIsConnected(false);
   };
 
   const onUserList = (userList: IRoom) => {
-    console.log("User list received", userList);
     setNames(userList);
   };
 
   const onRandomName = (name: string | null) => {
-    console.log("Random name received", name);
     if (!name) {
       setRandomName(null);
       return;
@@ -34,8 +36,6 @@ const Room = () => {
   };
 
   const onRolling = async () => {
-    console.log("Rolling...");
-
     setIsRolling(true);
   };
 
@@ -57,6 +57,7 @@ const Room = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
+      <ConnectionIndicator isConnected={isConnected} />
       <div className="my-10">
         <h1 className="text-3xl font-bold">Room: {roomName}</h1>
       </div>

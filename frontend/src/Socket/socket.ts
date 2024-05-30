@@ -11,8 +11,6 @@ export const SERVER_URL =
 
 export const roomName = window.location.href.split("/")[3] || "default";
 
-console.log("Connecting to server at", SERVER_URL, "with room name", roomName);
-
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   SERVER_URL,
   {

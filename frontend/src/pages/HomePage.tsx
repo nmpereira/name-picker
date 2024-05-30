@@ -13,7 +13,7 @@ const HomePage = () => {
         <div className="flex flex-row  items-center justify-center mb-6 gap-2">
           <input
             type="text"
-            placeholder="Enter a name"
+            placeholder="Room Name"
             className="border border-gray-400 rounded h-12 px-2 w-48"
             value={room}
             onChange={(e) => setRoom(e.target.value)}

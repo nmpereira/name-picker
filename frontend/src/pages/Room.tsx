@@ -61,6 +61,7 @@ const Room = () => {
         <h1 className="text-3xl font-bold">Room: {roomName}</h1>
       </div>
       <NamePicker name={randomName} isRolling={isRolling} />
+      <div className="divider"></div>
       <NameList names={names} />
     </div>
   );

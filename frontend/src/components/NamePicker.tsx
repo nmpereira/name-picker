@@ -15,29 +15,29 @@ const NamePicker = ({ name, isRolling }: NamePickerProps) => {
         <img
           src="https://emojicdn.elk.sh/🎲"
           alt="raised-hand"
-          className={`w-20 h-20`}
+          className="w-20 h-20 
+          hover:scale-110
+          "
         />
       </div>
 
-      <h1 className="text-2xl font-bold my-10">
-        {/* {
-          // if name is null, show "Pick a name"
-          !name ? (
-            "Pick a name"
-          ) : isRolling ? (
-            <span className="loading loading-dots loading-lg"></span>
-          ) : (
-            // if name is not null and isRolling is false, show the name
-            <RandomReveal isPlaying duration={2} characters={name} />
-          )
-        } */}
+      {/* button to clear names */}
+      <button
+        className="font-bold py-2 px-4 rounded w-48 text-white mt-6 bg-red-500 hover:bg-red-700"
+        onClick={() => {
+          socket.emit("clear-names", { roomname: roomName });
+        }}
+      >
+        Lower all hands
+      </button>
 
+      <h1 className="text-2xl font-bold my-10">
         {isRolling ? (
-          <span className="loading loading-dots loading-lg"></span>
+          <span className="loading loading-dots loading-md"></span>
         ) : name ? (
           <RandomReveal isPlaying duration={2} characters={name} />
         ) : (
-          "Pick a name"
+          <p className="text-3xl">Pick a name</p>
         )}
       </h1>
     </>

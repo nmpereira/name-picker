@@ -23,6 +23,7 @@ export interface ClientToServerEvents {
   "uncheck-name": (data: UserWithRoom) => void;
   "random-name": (data: UserWithRoom) => void;
   "roll-dice": (data: { roomname: string }) => void;
+  "clear-names": (data: { roomname: string }) => void;
 }
 
 export interface InterServerEvents {}

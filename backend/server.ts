@@ -101,7 +101,7 @@ io.on("connection", (socket) => {
     io.to(roomname).emit("rolling");
 
     await new Promise((resolve) => {
-      const timeout = Math.floor(Math.random() * 5000) + 1000;
+      const timeout = Math.floor(Math.random() * 3000) + 1000;
       console.log(`Rolling for ${timeout}ms`);
       setTimeout(resolve, timeout);
     });
@@ -114,11 +114,13 @@ io.on("connection", (socket) => {
     UserStore[roomname].lastRoll = randomName;
     io.to(roomname).emit("random-name", randomName);
     console.log(`Rolled a random name: ${randomName}`);
+  });
 
+  socket.on("clear-names", ({ roomname }: { roomname: string }) => {
     Object.keys(UserStore[roomname].users).forEach((name) => {
       UserStore[roomname].users[name] = false;
     });
-
     io.to(roomname).emit("user-list", UserStore[roomname].users);
+    console.log("Cleared all names");
   });
 });

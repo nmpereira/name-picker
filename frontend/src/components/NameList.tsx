@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { IRoom } from "../../../backend/common/UserStore";
 import socket, { roomName } from "../Socket/socket";
 import NameCard from "./NameCard";
@@ -38,22 +39,95 @@ const NameList = ({ names }: NameListProps) => {
 };
 
 const NameInput = () => {
+  const [error, setError] = useState<string | null>(null);
+  const [username, setUsername] = useState<string>("");
+
+  const validateName = (name: string) => {
+    if (name.length === 0) {
+      setError("Name cannot be empty");
+      return false;
+    }
+    if (name.length > 12) {
+      setError("Name cannot be longer than 12 characters");
+      return false;
+    }
+    // should include only letters, numbers, and spaces
+    if (!/^[a-zA-Z0-9 ]+$/.test(name)) {
+      setError("Name can only include letters, numbers, and spaces");
+      return false;
+    }
+
+    // should be atleast 3 characters
+    if (name.length < 3) {
+      setError("Name should be atleast 3 characters long");
+      return false;
+    }
+
+    // should have atleast 2 alphabets
+    if (!/[a-zA-Z].*[a-zA-Z]/.test(name)) {
+      setError("Name should have atleast 2 alphabets");
+      return false;
+    }
+
+    // should not start or end with a space
+    if (name[0] === " " || name[name.length - 1] === " ") {
+      setError("Name should not start or end with a space");
+      return false;
+    }
+
+    setError(null);
+    return true;
+  };
+
+  const handleAddName = () => {
+    if (validateName(username)) {
+      socket.emit("add-name", {
+        roomname: roomName,
+        username: username,
+      });
+      setUsername("");
+    }
+  };
+
   return (
-    <input
-      type="text"
-      placeholder="Add your name"
-      className="border-2 border-gray-300 p-2 rounded-lg w-48"
-      onKeyPress={(e) => {
-        if (e.key === "Enter") {
-          socket.emit("add-name", {
-            // name: e.currentTarget.value
-            roomname: roomName,
-            username: e.currentTarget.value,
-          });
-          e.currentTarget.value = "";
-        }
-      }}
-    />
+    <>
+      <div className="flex flex-row items-center justify-center gap-2">
+        <input
+          type="text"
+          placeholder="Add your name"
+          className="border-2 border-gray-300 p-2 rounded-lg w-48"
+          onChange={(e) => {
+            setUsername(e.currentTarget.value);
+            setError(null);
+          }}
+          // onKeyPress={(e) => {
+          //   if (e.key === "Enter") {
+          //     socket.emit("add-name", {
+          //       // name: e.currentTarget.value
+          //       roomname: roomName,
+          //       username: username,
+          //     });
+          //     e.currentTarget.value = "";
+          //   }
+          // }}
+        />
+        <button
+          className={`font-bold py-2 px-4 rounded w-16 
+          ${
+            error !== null || username === ""
+              ? "bg-gray-400"
+              : "bg-blue-500 hover:bg-blue-700 text-white"
+          }`}
+          onClick={() => {
+            handleAddName();
+          }}
+          disabled={error !== null || username === ""}
+        >
+          Add
+        </button>
+      </div>
+      {error && <p className="text-red-500">{error}</p>}
+    </>
   );
 };
 

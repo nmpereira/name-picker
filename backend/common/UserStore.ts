@@ -13,6 +13,7 @@
         user2:false,
       }
       lastRoll: "user1"
+      isRolling: true
     }
 }
 */
@@ -25,6 +26,7 @@ export interface IRoomStore {
   [key: string]: {
     users: IRoom;
     lastRoll: string | null;
+    isRolling: boolean;
   };
 }
 

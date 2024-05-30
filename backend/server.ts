@@ -43,6 +43,7 @@ io.on("connection", (socket) => {
     UserStore[roomName] = {
       users: {},
       lastRoll: null,
+      isRolling: false,
     };
     console.log(`Created room ${roomName}`);
   }
@@ -55,7 +56,7 @@ io.on("connection", (socket) => {
     socket.join(roomname);
     io.to(roomname).emit("user-list", UserStore[roomname].users);
 
-    if (UserStore[roomname].lastRoll) {
+    if (UserStore[roomname].lastRoll && !UserStore[roomname].isRolling) {
       io.to(roomname).emit(
         "random-name",
         UserStore[roomname].lastRoll as string
@@ -99,12 +100,7 @@ io.on("connection", (socket) => {
     }
 
     io.to(roomname).emit("rolling");
-
-    await new Promise((resolve) => {
-      const timeout = Math.floor(Math.random() * 3000) + 1000;
-      console.log(`Rolling for ${timeout}ms`);
-      setTimeout(resolve, timeout);
-    });
+    UserStore[roomname].isRolling = true;
 
     const names = Object.keys(UserStore[roomname].users).filter(
       (name) => UserStore[roomname].users[name]
@@ -112,8 +108,16 @@ io.on("connection", (socket) => {
     const randomIndex = Math.floor(Math.random() * names.length);
     const randomName = names[randomIndex];
     UserStore[roomname].lastRoll = randomName;
-    io.to(roomname).emit("random-name", randomName);
     console.log(`Rolled a random name: ${randomName}`);
+
+    await new Promise((resolve) => {
+      const timeout = Math.floor(Math.random() * 3000) + 1000;
+      console.log(`Rolling for ${timeout}ms`);
+      setTimeout(resolve, timeout);
+    });
+
+    io.to(roomname).emit("random-name", randomName);
+    UserStore[roomname].isRolling = false;
   });
 
   socket.on("clear-names", ({ roomname }: { roomname: string }) => {

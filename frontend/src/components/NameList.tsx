@@ -8,12 +8,17 @@ interface NameListProps {
 
 const NameList = ({ names }: NameListProps) => {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center max-w-4xl">
       <NameInput />
 
       <ul className="flex flex-wrap gap-4 mt-6 justify-center">
         {Object.keys(names).map((name, index) => (
-          <NameCard key={index} name={name} checked={names[name]} />
+          <NameCard
+            key={index}
+            name={name}
+            checked={names[name]}
+            names={names}
+          />
         ))}
       </ul>
     </div>

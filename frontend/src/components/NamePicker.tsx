@@ -1,9 +1,11 @@
 import socket, { roomName } from "../Socket/socket";
+import { RandomReveal } from "react-random-reveal";
 
 interface NamePickerProps {
-  name: string;
+  name: string | null;
+  isRolling: boolean;
 }
-const NamePicker = ({ name }: NamePickerProps) => {
+const NamePicker = ({ name, isRolling }: NamePickerProps) => {
   const handleRoll = () => {
     socket.emit("roll-dice", { roomname: roomName });
   };
@@ -16,7 +18,34 @@ const NamePicker = ({ name }: NamePickerProps) => {
         🎲
       </button>
 
-      <h1 className="text-2xl font-bold">{name}</h1>
+      <h1 className="text-2xl font-bold my-10">
+        {/* {isRolling ? "Rolling..." : name || "Pick a name"} */}
+        {/* {isRolling ? (
+          "Rolling..."
+        ) : (
+          <RandomReveal isPlaying duration={2} characters={name} />
+        )} */}
+        {/* {!name && ! ? (
+          "Pick a name"
+        ) : isRolling ? (
+          "Rolling..."
+        ) : (
+          <RandomReveal isPlaying duration={2} characters={name} />
+        )} */}
+
+        {/* when there is no roll, it should say pick a name. When rolling, it should say rolling.  */}
+        {
+          // if name is null, show "Pick a name"
+          !name ? (
+            "Pick a name"
+          ) : isRolling ? (
+            <span className="loading loading-dots loading-lg"></span>
+          ) : (
+            // if name is not null and isRolling is false, show the name
+            <RandomReveal isPlaying duration={2} characters={name} />
+          )
+        }
+      </h1>
     </>
   );
 };

@@ -1,12 +1,18 @@
 /*
 {
     "room1":{
+      users:{
         user1:true,
         user2:false,
+      }
+      lastRoll: "user1"
     }
     "room2":{
+      users:{
         user1:true,
         user2:false,
+      }
+      lastRoll: "user1"
     }
 }
 */
@@ -16,7 +22,10 @@ export interface IRoom {
 }
 
 export interface IRoomStore {
-  [key: string]: IRoom;
+  [key: string]: {
+    users: IRoom;
+    lastRoll: string | null;
+  };
 }
 
 export const UserStore: IRoomStore = {} as IRoomStore;

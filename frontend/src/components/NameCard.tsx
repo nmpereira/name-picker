@@ -1,8 +1,10 @@
+import { IRoom } from "../../../backend/common/UserStore";
 import socket, { roomName } from "../Socket/socket";
 
 interface NameCardProps {
   name: string;
   checked: boolean;
+  names: IRoom;
 }
 const NameCard = ({ name, checked }: NameCardProps) => {
   // This is a row in the NameList component with a checkbox

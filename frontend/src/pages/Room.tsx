@@ -6,7 +6,8 @@ import NamePicker from "../components/NamePicker";
 
 const Room = () => {
   const [names, setNames] = useState<IRoom>({});
-  const [randomName, setRandomName] = useState<string>("");
+  const [randomName, setRandomName] = useState<string | null>(null);
+  const [isRolling, setIsRolling] = useState<boolean>(false);
 
   const onConnect = () => {
     socket.emit("join", { roomname: roomName, username: "test-user" });
@@ -25,24 +26,37 @@ const Room = () => {
   const onRandomName = (name: string) => {
     console.log("Random name received", name);
     setRandomName(name);
+    setIsRolling(false);
   };
+
+  const onRolling = async () => {
+    console.log("Rolling...");
+
+    setIsRolling(true);
+  };
+
   useEffect(() => {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("user-list", onUserList);
     socket.on("random-name", onRandomName);
+    socket.on("rolling", onRolling);
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("user-list", onUserList);
+      socket.off("random-name", onRandomName);
+      socket.off("rolling", onRolling);
     };
   }, []);
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h1>Room {roomName}</h1>
-      <NamePicker name={randomName ? randomName : "No name picked yet"} />
+      <div className="my-10">
+        <h1 className="text-3xl font-bold">Room: {roomName}</h1>
+      </div>
+      <NamePicker name={randomName} isRolling={isRolling} />
       <NameList names={names} />
     </div>
   );

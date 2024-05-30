@@ -12,6 +12,7 @@ export interface ServerToClientEvents {
   // "uncheck-name": (name: string) => void;
   "user-list": (userList: IRoom) => void;
   "random-name": (name: string) => void;
+  rolling: () => void;
 }
 
 export interface ClientToServerEvents {

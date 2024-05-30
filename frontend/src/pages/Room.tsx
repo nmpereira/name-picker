@@ -63,20 +63,23 @@ const Room = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <ConnectionIndicator isConnected={isConnected} />
-      <div className="my-10">
-        <h1 className="text-3xl font-bold">Room: {roomName}</h1>
-      </div>
-      <NamePicker name={randomName} isRolling={isRolling} />
-      <div className="divider"></div>
-      <NameList names={names} />
+    <>
+      <div className="flex flex-col items-center justify-center">
+        <ConnectionIndicator isConnected={isConnected} />
 
-      {/* stick to bottom */}
-      <div className="fixed bottom-0 right-0 p-4">
-        <OnlineCount count={onlineCount} />
+        <div className="my-10">
+          <h1 className="text-3xl font-bold">Room: {roomName}</h1>
+        </div>
+        <NamePicker name={randomName} isRolling={isRolling} />
+        <div className="divider"></div>
+        <NameList names={names} />
+
+        {/* stick to bottom */}
+        <div className="fixed bottom-0 right-0 p-4">
+          <OnlineCount count={onlineCount} />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

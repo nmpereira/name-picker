@@ -5,6 +5,7 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
+      <img src="/dice.png" alt="logo" className="w-32 h-32" />
       <h1 className="text-7xl font-bold text-center">Random Name Picker</h1>
       <p className="my-5 text-lg">
         How to use: Enter a name and click "Go to Room" to start.
